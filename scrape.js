@@ -11,19 +11,29 @@ request(url, function(error, response, html){
   if(!error){
     var $ = cheerio.load(html);
 
-    var feels_like, wind;
-    var json = { feels_like : "", wind : ""};
+    var current_temp_c, apparent_temp_c, wind, wind_array, wind_speed_kmh, wind_cardinal_direction;
+    var json = { current_temp_c : "", apparent_temp_c : "", wind_speed_kmh : "", wind_cardinal_direction : ""};
 
+    $('.current-temp').filter(function(){
+      var data = $(this);
+      current_temp_c = data.text().trim();
+      current_temp_c = current_temp_c.substring(0, current_temp_c.length - 1);
+      json.current_temp_c = current_temp_c;
+    })
+    
     $('.feels-like').filter(function(){
       var data = $(this);
-      feels_like = data.children().last().text().trim();
-      json.feels_like = feels_like;
+      apparent_temp_c = data.children().last().text().trim();
+      apparent_temp_c = apparent_temp_c.substring(0, apparent_temp_c.length - 2);
+      json.apparent_temp_c = apparent_temp_c;
     })
 
     $('.wind-spd').filter(function(){
       var data = $(this);
       wind = data.text();
-      json.wind = wind;
+      wind_array = wind.split(" ");
+      json.wind_speed_kmh = wind_array[1];
+      json.wind_cardinal_direction = wind_array[0];
   })
 
   }
