@@ -30,7 +30,7 @@ request(url, function(error, response, html){
       var data = $(this);
       wind = data.text();
       wind_array = wind.split(" ");
-      json.wind_speed_kmh = wind_array[1];
+      json.wind_speed_kmh = wind_array[1].trim();
       json.wind_cardinal_direction = wind_array[0];
     })
     
