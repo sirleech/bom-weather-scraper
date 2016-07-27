@@ -6,30 +6,27 @@ var app     = express();
 
 app.get('/scrape', function(req, res){
   // Let's scrape Anchorman 2
-  url = 'http://www.imdb.com/title/tt1229340/';
+  url = 'http://m.bom.gov.au/act/canberra/';
 
   request(url, function(error, response, html){
     if(!error){
       var $ = cheerio.load(html);
 
-      var title, release, rating;
-      var json = { title : "", release : "", rating : ""};
+      var feels_like, wind;
+      var json = { feels_like : "", wind : ""};
 
-      $('.title_wrapper').filter(function(){
+      $('.feels-like').filter(function(){
         var data = $(this);
-        title = data.children().first().text().trim();
-        release = data.children().last().children().last().text().trim();
-
-        json.title = title;
-        json.release = release;
+        feels_like = data.children().last().text().trim();
+        json.feels_like = feels_like;
       })
-
-      $('.ratingValue').filter(function(){
+      
+      $('.wind-spd').filter(function(){
         var data = $(this);
-        rating = data.text().trim();
+        wind = data.text();
+        json.wind = wind;
+    })
 
-        json.rating = rating;
-      })
     }
 
     fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
